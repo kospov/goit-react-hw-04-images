@@ -1,11 +1,17 @@
-// import * as basicLightbox from 'basiclightbox';
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
-const Modal = ({ modalParams }) => {
+const Modal = ({ modalParams, closeModalByClickOnOverlay }) => {
   const { alt, href } = modalParams;
+
+  const handleOverlayClick = e => {
+    if (e.target === e.currentTarget) {
+      closeModalByClickOnOverlay();
+    }
+  };
+
   return (
-    <div className={s.overlay}>
+    <div className={s.overlay} onClick={handleOverlayClick}>
       <div class={s.modal}>
         <img src={href} alt={alt} />
       </div>

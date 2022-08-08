@@ -24,6 +24,10 @@ class App extends Component {
     },
   };
 
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyDown);
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
 
@@ -34,22 +38,12 @@ class App extends Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
+
   updateQuery = formInput => {
     this.setState({ query: formInput, page: 1 });
-  };
-
-  updatePage = () => {
-    this.setState(prev => ({ page: prev.page + 1 }));
-  };
-
-  updateModalParams = ({ alt, href }) => {
-    return this.setState({
-      isOpenModal: true,
-      modal: {
-        alt,
-        href,
-      },
-    });
   };
 
   getFirstPageQueriedPhotos = () => {
@@ -85,9 +79,37 @@ class App extends Component {
       .finally(() => this.setState({ isLoading: false }));
   };
 
+  updatePage = () => {
+    this.setState(prev => ({ page: prev.page + 1 }));
+  };
+
   calculateNumberPages = () => {
     const { totalHits } = this.state;
     return Math.ceil(totalHits / per_page);
+  };
+
+  updateModalParams = ({ alt, href }) => {
+    return this.setState({
+      isOpenModal: true,
+      modal: {
+        alt,
+        href,
+      },
+    });
+  };
+
+  closeModal = () => {
+    this.setState({ isOpenModal: false });
+  };
+
+  handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      this.closeModal();
+    }
+  };
+
+  closeModalByClickOnOverlay = () => {
+    this.closeModal();
   };
 
   render() {
@@ -106,7 +128,12 @@ class App extends Component {
         {images.length === 0 || page === this.calculateNumberPages() || (
           <Button increasePageNumber={this.updatePage} />
         )}
-        {isOpenModal && <Modal modalParams={modal} />}
+        {isOpenModal && (
+          <Modal
+            modalParams={modal}
+            closeModalByClickOnOverlay={this.closeModalByClickOnOverlay}
+          />
+        )}
       </div>
     );
   }

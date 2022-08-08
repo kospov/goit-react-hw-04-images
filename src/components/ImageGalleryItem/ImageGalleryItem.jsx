@@ -5,9 +5,6 @@ const ImageGalleryItem = ({ imageParams, updateModalParams }) => {
   const { src, alt, key, href } = imageParams;
 
   const handleItemClick = () => {
-    // const item = e.currentTarget;
-    // const itemImage = e.target;
-
     updateModalParams({
       alt,
       href,
