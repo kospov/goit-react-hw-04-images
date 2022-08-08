@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import s from './ImageGalleryItem.module.css';
 
 const ImageGalleryItem = ({ imageParams, handleItemClick }) => {
@@ -13,6 +14,11 @@ const ImageGalleryItem = ({ imageParams, handleItemClick }) => {
       <img src={src} alt={alt} className={s.image} href={href} />
     </li>
   );
+};
+
+ImageGalleryItem.propTypes = {
+  imageParams: PropTypes.object,
+  handleItemClick: PropTypes.func,
 };
 
 export default ImageGalleryItem;

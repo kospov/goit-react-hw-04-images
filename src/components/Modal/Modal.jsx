@@ -1,4 +1,5 @@
 // import * as basicLightbox from 'basiclightbox';
+import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
 const Modal = ({ imageParams }) => {
@@ -10,6 +11,10 @@ const Modal = ({ imageParams }) => {
       </div>
     </div>
   );
+};
+
+Modal.propTypes = {
+  imageParams: PropTypes.object,
 };
 
 export default Modal;

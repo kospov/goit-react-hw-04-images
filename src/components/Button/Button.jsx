@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import s from './Button.module.css';
 
 const Button = ({ increasePageNumber }) => {
@@ -6,6 +7,10 @@ const Button = ({ increasePageNumber }) => {
       Load more
     </button>
   );
+};
+
+Button.propTypes = {
+  increasePageNumber: PropTypes.func,
 };
 
 export default Button;

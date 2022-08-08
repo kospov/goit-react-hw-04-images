@@ -47,7 +47,7 @@ class App extends Component {
     const { alt, key, href } = imageParams;
 
     return this.setState({
-      isOpenModal: false,
+      isOpenModal: true,
       modal: {
         alt,
         href,
