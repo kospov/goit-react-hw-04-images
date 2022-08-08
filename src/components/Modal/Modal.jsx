@@ -1,26 +1,39 @@
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
-const Modal = ({ modalParams, closeModalByClickOnOverlay }) => {
-  const { alt, href } = modalParams;
+class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.props.handleKeyDown);
+  }
 
-  const handleOverlayClick = e => {
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.props.handleKeyDown);
+  }
+
+  handleOverlayClick = e => {
     if (e.target === e.currentTarget) {
-      closeModalByClickOnOverlay();
+      this.props.closeModalByClickOnOverlay();
     }
   };
 
-  return (
-    <div className={s.overlay} onClick={handleOverlayClick}>
-      <div class={s.modal}>
-        <img src={href} alt={alt} />
+  render() {
+    const { alt, href } = this.props.modalParams;
+
+    return (
+      <div className={s.overlay} onClick={this.handleOverlayClick}>
+        <div class={s.modal}>
+          <img src={href} alt={alt} />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 Modal.propTypes = {
   imageParams: PropTypes.object,
+  handleKeyDown: PropTypes.func,
+  closeModalByClickOnOverlay: PropTypes.func,
 };
 
 export default Modal;

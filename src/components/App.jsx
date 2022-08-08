@@ -1,9 +1,5 @@
 import { Component } from 'react';
-import {
-  fetchFirstPhotos,
-  fetchNextPhotos,
-  per_page,
-} from '../utils/fetch-api';
+import { fetchPhotos, per_page } from '../utils/fetch-api';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
@@ -24,51 +20,24 @@ class App extends Component {
     },
   };
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
-
   componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
 
-    if (prevState.query !== query) {
-      this.getFirstPageQueriedPhotos();
-    } else if (prevState.page !== page) {
-      this.getNextPageQueriedPhotos(query, page);
+    if (prevState.query !== query || prevState.page !== page) {
+      this.getQueriedPhotos(query, page);
     }
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
-
   updateQuery = formInput => {
-    this.setState({ query: formInput, page: 1 });
+    this.setState({ query: formInput, page: 1, images: [] });
   };
 
-  getFirstPageQueriedPhotos = () => {
-    const { query, page } = this.state;
-
-    this.setState({ isLoading: true });
-
-    return fetchFirstPhotos(query, page)
-      .then(data => {
-        return this.setState({
-          page: 1,
-          images: [...data.hits],
-          totalHits: data.totalHits,
-        });
-      })
-      .catch(error => console.log(error))
-      .finally(() => this.setState({ isLoading: false }));
-  };
-
-  getNextPageQueriedPhotos = () => {
+  getQueriedPhotos = () => {
     const { images, query, page } = this.state;
 
     this.setState({ isLoading: true });
 
-    return fetchNextPhotos(query, page)
+    return fetchPhotos(query, page)
       .then(data => {
         return this.setState({
           images: [...images, ...data.hits],
@@ -132,6 +101,7 @@ class App extends Component {
           <Modal
             modalParams={modal}
             closeModalByClickOnOverlay={this.closeModalByClickOnOverlay}
+            handleKeyDown={this.handleKeyDown}
           />
         )}
       </div>
