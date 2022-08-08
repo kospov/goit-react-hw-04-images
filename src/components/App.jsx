@@ -17,11 +17,10 @@ class App extends Component {
     images: [],
     totalHits: '',
     isLoading: false,
-    isOpenModal: '',
+    isOpenModal: false,
     modal: {
       alt: '',
       href: '',
-      key: '',
     },
   };
 
@@ -43,15 +42,12 @@ class App extends Component {
     this.setState(prev => ({ page: prev.page + 1 }));
   };
 
-  updateModalParams = ({ imageParams }) => {
-    const { alt, key, href } = imageParams;
-
+  updateModalParams = ({ alt, href }) => {
     return this.setState({
       isOpenModal: true,
       modal: {
         alt,
         href,
-        key,
       },
     });
   };
@@ -104,13 +100,13 @@ class App extends Component {
         {images.length === 0 || (
           <ImageGallery
             images={images}
-            handleItemClick={this.updateModalParams}
+            updateModalParams={this.updateModalParams}
           />
         )}
         {images.length === 0 || page === this.calculateNumberPages() || (
           <Button increasePageNumber={this.updatePage} />
         )}
-        {isOpenModal && <Modal imageParams={modal} />}
+        {isOpenModal && <Modal modalParams={modal} />}
       </div>
     );
   }

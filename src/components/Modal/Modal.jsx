@@ -2,8 +2,8 @@
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
-const Modal = ({ imageParams }) => {
-  const { alt, href } = imageParams;
+const Modal = ({ modalParams }) => {
+  const { alt, href } = modalParams;
   return (
     <div className={s.overlay}>
       <div class={s.modal}>

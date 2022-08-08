@@ -16,12 +16,12 @@ class Searchbar extends Component {
   handleSubmitClick = e => {
     e.preventDefault();
     const { query } = this.state;
-    // const formElEl = document.querySelector('form');
+    const formEl = document.querySelector('form');
 
     this.props.updateQuery(query);
 
-    // formElEl.reset();
-    // this.reset();
+    formEl.reset();
+    this.reset();
   };
 
   reset = () => {

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import s from './ImageGallery.module.css';
 
-const ImageGallery = ({ images, handleItemClick }) => {
+const ImageGallery = ({ images, updateModalParams }) => {
   return (
     <ul className={s.imageGallery}>
       {images.map(el => (
@@ -13,7 +13,7 @@ const ImageGallery = ({ images, handleItemClick }) => {
             key: el.id,
             href: el.largeImageURL,
           }}
-          handleItemClick={handleItemClick}
+          updateModalParams={updateModalParams}
         />
       ))}
     </ul>
