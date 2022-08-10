@@ -23,7 +23,9 @@ const App = () => {
 
     fetchPhotos(query, page)
       .then(data => {
-        setImages([...images, ...data.hits]);
+        setImages(prev => {
+          return [...prev, ...data.hits];
+        });
         setTotalHits(data.totalHits);
       })
       .catch(error => console.log(error))
