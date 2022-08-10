@@ -19,25 +19,21 @@ const App = () => {
   useEffect(() => {
     if (query === '') return;
 
-    getQueriedPhotos(query, page);
-  }, [query, page]);
-
-  const updateQuery = formInput => {
-    setQuery(formInput);
-    setPage(1);
-    setImages([]);
-  };
-
-  const getQueriedPhotos = () => {
     setIsLoading(true);
 
-    return fetchPhotos(query, page)
+    fetchPhotos(query, page)
       .then(data => {
         setImages([...images, ...data.hits]);
         setTotalHits(data.totalHits);
       })
       .catch(error => console.log(error))
       .finally(() => setIsLoading(false));
+  }, [query, page]);
+
+  const updateQuery = formInput => {
+    setQuery(formInput);
+    setPage(1);
+    setImages([]);
   };
 
   const updatePage = () => {
