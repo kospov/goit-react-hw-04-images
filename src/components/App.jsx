@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchPhotos, per_page } from '../utils/fetch-api';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -6,107 +6,87 @@ import Button from './Button/Button';
 import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
 
-class App extends Component {
-  state = {
-    query: '',
-    page: 1,
-    images: [],
-    totalHits: '',
-    isLoading: false,
-    isOpenModal: false,
-    modal: {
-      alt: '',
-      href: '',
-    },
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [images, setImages] = useState([]);
+  const [totalHits, setTotalHits] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [alt, setAlt] = useState('');
+  const [href, setHref] = useState('');
+
+  useEffect(() => {
+    if (query === '') return;
+
+    getQueriedPhotos(query, page);
+  }, [query, page]);
+
+  const updateQuery = formInput => {
+    setQuery(formInput);
+    setPage(1);
+    setImages([]);
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const { query, page } = this.state;
-
-    if (prevState.query !== query || prevState.page !== page) {
-      this.getQueriedPhotos(query, page);
-    }
-  }
-
-  updateQuery = formInput => {
-    this.setState({ query: formInput, page: 1, images: [] });
-  };
-
-  getQueriedPhotos = () => {
-    const { images, query, page } = this.state;
-
-    this.setState({ isLoading: true });
+  const getQueriedPhotos = () => {
+    setIsLoading(true);
 
     return fetchPhotos(query, page)
       .then(data => {
-        return this.setState({
-          images: [...images, ...data.hits],
-          totalHits: data.totalHits,
-        });
+        setImages([...images, ...data.hits]);
+        setTotalHits(data.totalHits);
       })
       .catch(error => console.log(error))
-      .finally(() => this.setState({ isLoading: false }));
+      .finally(() => setIsLoading(false));
   };
 
-  updatePage = () => {
-    this.setState(prev => ({ page: prev.page + 1 }));
+  const updatePage = () => {
+    setPage(prev => prev + 1);
   };
 
-  calculateNumberPages = () => {
-    const { totalHits } = this.state;
+  const calculateNumberPages = () => {
     return Math.ceil(totalHits / per_page);
   };
 
-  updateModalParams = ({ alt, href }) => {
-    return this.setState({
-      isOpenModal: true,
-      modal: {
-        alt,
-        href,
-      },
-    });
+  const updateModalParams = ({ alt, href }) => {
+    setIsOpenModal(true);
+    setAlt(alt);
+    setHref(href);
   };
 
-  closeModal = () => {
-    this.setState({ isOpenModal: false });
+  const closeModal = () => {
+    setIsOpenModal(false);
   };
 
-  handleKeyDown = e => {
+  const handleKeyDown = e => {
     if (e.code === 'Escape') {
-      this.closeModal();
+      closeModal();
     }
   };
 
-  closeModalByClickOnOverlay = () => {
-    this.closeModal();
+  const closeModalByClickOnOverlay = () => {
+    closeModal();
   };
 
-  render() {
-    const { images, page, isLoading, isOpenModal, modal } = this.state;
-
-    return (
-      <div class="App">
-        <Searchbar updateQuery={this.updateQuery} />
-        {isLoading && <Loader />}
-        {images.length === 0 || (
-          <ImageGallery
-            images={images}
-            updateModalParams={this.updateModalParams}
-          />
-        )}
-        {images.length === 0 || page === this.calculateNumberPages() || (
-          <Button increasePageNumber={this.updatePage} />
-        )}
-        {isOpenModal && (
-          <Modal
-            modalParams={modal}
-            closeModalByClickOnOverlay={this.closeModalByClickOnOverlay}
-            handleKeyDown={this.handleKeyDown}
-          />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div class="App">
+      <Searchbar updateQuery={updateQuery} />
+      {isLoading && <Loader />}
+      {images.length === 0 || (
+        <ImageGallery images={images} updateModalParams={updateModalParams} />
+      )}
+      {images.length === 0 || page === calculateNumberPages() || (
+        <Button increasePageNumber={updatePage} />
+      )}
+      {isOpenModal && (
+        <Modal
+          modalParams={{ alt, href }}
+          closeModalByClickOnOverlay={closeModalByClickOnOverlay}
+          handleKeyDown={handleKeyDown}
+        />
+      )}
+    </div>
+  );
+};
 
 export default App;
