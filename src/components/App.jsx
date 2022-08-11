@@ -56,32 +56,18 @@ const App = () => {
     setIsOpenModal(false);
   };
 
-  const handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      closeModal();
-    }
-  };
-
-  const closeModalByClickOnOverlay = () => {
-    closeModal();
-  };
-
   return (
     <div class="App">
       <Searchbar updateQuery={updateQuery} />
-      {isLoading && <Loader />}
       {images.length === 0 || (
         <ImageGallery images={images} updateModalParams={updateModalParams} />
       )}
+      {isLoading && <Loader />}
       {images.length === 0 || page === calculateNumberPages() || (
         <Button increasePageNumber={updatePage} />
       )}
       {isOpenModal && (
-        <Modal
-          modalParams={{ alt, href }}
-          closeModalByClickOnOverlay={closeModalByClickOnOverlay}
-          handleKeyDown={handleKeyDown}
-        />
+        <Modal modalParams={{ alt, href }} closeModal={closeModal} />
       )}
     </div>
   );

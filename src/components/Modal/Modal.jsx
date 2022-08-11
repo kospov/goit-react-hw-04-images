@@ -2,12 +2,10 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
-const Modal = ({ modalParams, handleKeyDown, closeModalByClickOnOverlay }) => {
+const Modal = ({ modalParams, closeModal }) => {
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
-  });
 
-  useEffect(() => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -15,9 +13,15 @@ const Modal = ({ modalParams, handleKeyDown, closeModalByClickOnOverlay }) => {
 
   const { alt, href } = modalParams;
 
+  const handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      closeModal();
+    }
+  };
+
   const handleOverlayClick = e => {
     if (e.target === e.currentTarget) {
-      closeModalByClickOnOverlay();
+      closeModal();
     }
   };
 
@@ -32,8 +36,7 @@ const Modal = ({ modalParams, handleKeyDown, closeModalByClickOnOverlay }) => {
 
 Modal.propTypes = {
   modalParams: PropTypes.object,
-  handleKeyDown: PropTypes.func,
-  closeModalByClickOnOverlay: PropTypes.func,
+  closeModal: PropTypes.func,
 };
 
 export default Modal;
